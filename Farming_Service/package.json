@@ -1,0 +1,20 @@
+{
+  "name": "farming-service",
+  "version": "1.0.0",
+  "description": "Directory cloning bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node /test/test.js"
+  },
+  "author": "Arpit Khandelwal",
+  "license": "MIT",
+  "dependencies": {
+    "fs-extra": "^7.0.0",
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {
+    "dotenv": "^6.0.0",
+    "eslint": "^5.4.0"
+  }
+}

@@ -4,7 +4,7 @@ services:
     image: redis:alpine
     container_name: farm-cache
     volumes:
-      - ./redis:/data
+      - ./redis-conf:/data
     ports:
         - "6379:6379"
 

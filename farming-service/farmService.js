@@ -4,19 +4,18 @@ const fse = require('fs-extra');
 const redis = require('redis');
 
 var redisClient; //Initialize when necessary
-
 var farm = []; // global in-memory farm to host the directories
 var refereshInProgress = false;
+
 /*
  * InitFarm method
- *
  */
 function initFarm(options) {
     try {
         // Log to the console 
         console.log("========== Farming Started ==========");
         console.log("Caching mechanism : " + options.cache);
-        console.log("Source : " + options.source); 
+        console.log("Source : " + options.seed); 
         console.log("Destination Farm : " + options.destination);
         console.log("Farm will refresh every : " + options.interval + " seconds");
 
@@ -25,7 +24,7 @@ function initFarm(options) {
             console.log("Redis Port : " + options.redisPort );
             redisClient = redis.createClient(options.redisPort, options.redisHost);
         }
-        console.log("=================================");
+        console.log("=====================================");
         // Schedule the copy at given interval
         let interval = options.interval * 1000; // convert seconds to milliseconds
         setInterval(()=>{refreshFarm(options);}, interval);        
@@ -61,7 +60,7 @@ function getNext() {
  */
 async function refreshFarm(options) {
     if(!refereshInProgress){
-        let source = options.source;
+        let source = options.seed;
         let destination = options.destination;
         let activeClonesNeeded = options.activeCloneCount;
 
@@ -90,8 +89,8 @@ async function refreshFarm(options) {
 }
 
 /* 
- Returns the active clone count from the Redis or In-Memory Farm
-*/
+ * Returns the active clone count from the Redis or In-Memory Farm
+ */
 async function getFarmStatus() {
     return new Promise(function(resolve, reject) {
         if(redisClient){ // cache = Redis

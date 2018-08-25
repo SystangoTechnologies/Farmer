@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "node /test/test.js"
+    "test": "node ./test/test.js"
   },
   "author": "Arpit Khandelwal",
   "license": "MIT",

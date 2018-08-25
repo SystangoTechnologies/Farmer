@@ -36,4 +36,4 @@ npm-debug.log
 .vscode/
 
 # Farming Service
-/Redis/*.rdb
+/redis/*.rdb

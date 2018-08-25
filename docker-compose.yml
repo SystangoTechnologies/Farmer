@@ -4,16 +4,14 @@ services:
     image: redis:alpine
     container_name: farm-cache
     volumes:
-      - ./Redis:/data
+      - ./redis:/data
     ports:
         - "6379:6379"
 
   farming-service:
-    build: ./Farming_Service/
+    build: ./farming-service/
     container_name: farming-service
     environment:
-      - FARM_HOME=./dest
-      - SOURCE=./seed
       - FARM_REFRESH_INTERVAL=10
       - ACTIVE_CLONES_NEEDED=10
       - FARM_CACHE=redis

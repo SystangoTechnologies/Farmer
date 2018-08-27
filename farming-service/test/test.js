@@ -1,8 +1,7 @@
-const farm = require('../index.js');
 const dotenv = require('dotenv');
-
 dotenv.config(); // Init dotenv
-farm.init(); // Invoke Farm
+
+const farm = require('../index.js'); //automatically invokes the init method
 
 // Try to get next farm entity every second
 setInterval(()=>{ emptyFarm(); },15000);

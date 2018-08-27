@@ -38,7 +38,7 @@ function initFarm(options) {
  */
 function getNext() {
     return new Promise(function(resolve, reject) {
-        if(redisClient){ // cache = Redis
+        if(redisClient){ // cache = redis
             redisClient.spop("farm", function(err, result) {
                 if(err || !result) {
                     reject("Farm is empty at the moment.");
@@ -73,7 +73,7 @@ async function refreshFarm(options) {
                 let dir = seedNumber + difference;
                 let dirPath = path.join(destination, dir.toString());
                 fse.copySync(source, dirPath);
-                if(redisClient) { // cache = Redis
+                if(redisClient) { // cache = redis
                     redisClient.sadd("farm", dir);
                 } else { // cache = In-Memory
                     farm.push(dir);
@@ -94,7 +94,7 @@ async function refreshFarm(options) {
  */
 async function getFarmStatus() {
     return new Promise(function(resolve, reject) {
-        if(redisClient){ // cache = Redis
+        if(redisClient){ // cache = redis
             redisClient.scard("farm", function(err, result) {
                 let count = result;
                 if(err || !result) {

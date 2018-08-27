@@ -5,7 +5,7 @@ const redis = require('redis');
 
 var redisClient; //Initialize when necessary
 var farm = []; // global in-memory farm to host the directories
-var refereshInProgress = false;
+var refreshInProgress = false;
 
 /*
  * InitFarm method
@@ -34,12 +34,12 @@ function initFarm(options) {
 }
 
 /*
- * Method to return next available entitiy in the farm
+ * Method to return next available entity in the farm
  */
 function getNext() {
     return new Promise(function(resolve, reject) {
         if(redisClient){ // cache = Redis
-            redisClient.rpop("farm", function(err, result) {
+            redisClient.spop("farm", function(err, result) {
                 if(err || !result) {
                     reject("Farm is empty at the moment.");
                 }
@@ -59,7 +59,7 @@ function getNext() {
  * Refresh the Farm at given interval and fill up the deficit of directories
  */
 async function refreshFarm(options) {
-    if(!refereshInProgress){
+    if(!refreshInProgress){
         let source = options.seed;
         let destination = options.destination;
         let activeClonesNeeded = options.activeCloneCount;
@@ -68,12 +68,13 @@ async function refreshFarm(options) {
         let difference = activeClonesNeeded - currentActiveClones;
         console.log("currentActiveClones = " + currentActiveClones + " difference = " + difference);
         if(difference > 0) { // Need to clone
+            let seedNumber = Date.now();
             while (difference > 0) {
-                let dir = Date.now().toString();
-                let dirPath = path.join(destination, dir);
+                let dir = seedNumber + difference;
+                let dirPath = path.join(destination, dir.toString());
                 fse.copySync(source, dirPath);
                 if(redisClient) { // cache = Redis
-                    redisClient.rpush("farm", dir);
+                    redisClient.sadd("farm", dir);
                 } else { // cache = In-Memory
                     farm.push(dir);
                 }
@@ -84,7 +85,7 @@ async function refreshFarm(options) {
             console.log("Sufficient entities are available, farming not needed.");
         }
     } else {
-        console.log("A refresh opertion is in progress, will check again in " + options.interval + " seconds");
+        console.log("A refresh operation is in progress, will check again in " + options.interval + " seconds");
     }
 }
 
@@ -94,7 +95,7 @@ async function refreshFarm(options) {
 async function getFarmStatus() {
     return new Promise(function(resolve, reject) {
         if(redisClient){ // cache = Redis
-            redisClient.llen("farm", function(err, result) {
+            redisClient.scard("farm", function(err, result) {
                 let count = result;
                 if(err || !result) {
                     count = 0;

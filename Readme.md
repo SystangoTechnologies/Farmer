@@ -20,7 +20,12 @@ Based on the values set for above configurations, the _Farmer_ is going to keep 
 - **Docker**      - Containerisation framework
 
 ## Running the server locally
-This service can be used in standalone mode (without docker) using the index.js file in the farming-service directory.
+This service can be used in standalone mode (without docker) using the index.js file in the farming-service directory. When its run locally, you can set two additional parameters -
+
+* SEED        : Points to a location other than the local "seed" directory that you wish to clone
+* DESTINATION : Points to a destination other than local "dest" directory to clone the seed file into
+
+These parameters don't have a lot of meaning when running inside docker, as over there we prefer to use volumes to mount these directories in so that we can get the results outside of container on host machines.
 
 ## Docker
 This service can be easily started using the following single command -
